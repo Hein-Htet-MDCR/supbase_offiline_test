@@ -30,9 +30,13 @@ class AppDatabase extends _$AppDatabase {
       // Enforce SQLite Foreign Key constraints
       await customStatement('PRAGMA foreign_keys = ON;');
     },
+      // Runs the first time a user opens the app to create all 6 tables.
     onCreate: (Migrator m) async {
       await m.createAll();
     },
+    // Handles database updates when the app updates. 
+    // If a user updates from version 1 to 2, 
+    // it adds the lastError column to the sync queue table without deleting the user's existing data
     onUpgrade: (Migrator m, int from, int to) async {
       if (from < 2) {
         // Migration example: Adding lastError column to sync_queue_table
